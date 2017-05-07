@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>SIMONFL3TCHER: Best Practices</title>
+  <subtitle>Posts tagged with Best Practices</subtitle>
+  <id>http://blog.simonfl3tcher.com</id>
+  <link href="http://blog.simonfl3tcher.com"/>
+  <link href="http://blog.simonfl3tcher.com/tag/best-practices/feed.xml" rel="self"/>
+  <updated>2016-09-04T01:00:00+01:00</updated>
+  <author>
+    <name>Simon Fletcher</name>
+  </author>
+  <entry>
+    <title>Yet another article about continuous deployment</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2016/09/04/yet-another-article-about-continuous-deployment/"/>
+    <id>http://blog.simonfl3tcher.com/2016/09/04/yet-another-article-about-continuous-deployment/</id>
+    <published>2016-09-04T01:00:00+01:00</published>
+    <updated>2017-04-30T17:09:10+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out there about continuous deployment. But this one is slightly different. It is about my exploration of continuous deployment from beginning to end. This article</summary>
+  </entry>
+  <entry>
+    <title>The 10 commandments (guidelines) of a README</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/"/>
+    <id>http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/</id>
+    <published>2016-11-15T00:00:00+00:00</published>
+    <updated>2017-05-07T12:03:06+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get people up and running on a production app. And contributing work as soon as possible. The act of increasing</summary>
+  </entry>
+  <entry>
+    <title>An opinionated react Progressive Web App repository</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/02/26/an-opinionated-react-progressive-web-app-repository/"/>
+    <id>http://blog.simonfl3tcher.com/2017/02/26/an-opinionated-react-progressive-web-app-repository/</id>
+    <published>2017-02-26T00:00:00+00:00</published>
+    <updated>2017-05-07T12:41:00+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">Over the past week or so I have been working on understanding the ins and outs of Progressive Web Apps. In this endeavour, I decided that I would create my very own (very opinionated) repository full of all the tools that I need to create a quick and</summary>
+  </entry>
+  <entry>
+    <title>Cross-functional Mobbing</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/03/29/cross-functional-mobbing/"/>
+    <id>http://blog.simonfl3tcher.com/2017/03/29/cross-functional-mobbing/</id>
+    <published>2017-03-29T01:00:00+01:00</published>
+    <updated>2017-05-07T12:28:05+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">The full article was written and posted on Medium on behalf of Mint Digital. This article describes my time in attempting to hack Mob Programming to include the entire product team.
+
+Original Article:
+
+Cross-functional Mobbing
+</summary>
+  </entry>
+</feed>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>SIMONFL3TCHER: Ruby</title>
+  <subtitle>Posts tagged with Ruby</subtitle>
+  <id>http://blog.simonfl3tcher.com</id>
+  <link href="http://blog.simonfl3tcher.com"/>
+  <link href="http://blog.simonfl3tcher.com/tag/ruby/feed.xml" rel="self"/>
+  <updated>2015-11-26T00:00:00+00:00</updated>
+  <author>
+    <name>Simon Fletcher</name>
+  </author>
+  <entry>
+    <title>Why I love update_attributes</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/"/>
+    <id>http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/</id>
+    <published>2015-11-26T00:00:00+00:00</published>
+    <updated>2017-03-22T08:58:27+00:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">This week I am working on a project for mint digital and I came across something that inspired me to write my first of many blog posts. So without further a do lets go ahead and dive straight into some code.
+
+To begin with I had the following models:</summary>
+  </entry>
+  <entry>
+    <title>My love affair with Ruby around aliases</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2015/12/31/ruby-around-aliases/"/>
+    <id>http://blog.simonfl3tcher.com/2015/12/31/ruby-around-aliases/</id>
+    <published>2015-12-31T00:00:00+00:00</published>
+    <updated>2017-03-22T09:00:47+00:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the conclusion, or rather I was  pushed by fellow colleges into believing that ruby metaprogramming is not necessary on a day to day basis, and should be used</summary>
+  </entry>
+</feed>

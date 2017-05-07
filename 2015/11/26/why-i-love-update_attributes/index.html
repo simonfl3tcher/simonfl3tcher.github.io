@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: Why I love update_attributes</title>
+<meta content='This week I am working on a project for mint digital and I came across something that inspired me to write my first of many blog posts. So witho...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='Why I love update_attributes' property='og:title'>
+<meta content='This week I am working on a project for mint digital and I came across something that inspired me to write my first of many blog posts. So witho...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/' property='og:url'>
+<meta content='2015-11-26' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='Why I love update_attributes' name='twitter:title'>
+<meta content='This week I am working on a project for mint digital and I came across something that inspired me to write my first of many blog posts. So witho...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/' name='twitter:url'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header no-cover post-head'>
+<nav class='main-nav clearfix'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>Why I love update_attributes</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2015-11-26'>
+26 November 2015
+</time>
+on <a href='/tag/ruby/'>Ruby</a>, <a href='/tag/ruby-on-rails/'>Ruby On Rails</a>
+</section>
+</header>
+<section class='post-content'><p>This week I am working on a project for <a href="http://mintdigital.com" rel="nofollow">mint digital</a> and I came across something that inspired me to write my first of many blog posts. So without further a do lets go ahead and dive straight into some code.</p>
+
+<p>To begin with I had the following models:</p>
+<pre class="highlight plaintext"><code>class Author &lt; ActiveRecord::Base
+  has_many :books
+end
+
+class Book &lt; ActiveRecord::Base
+  belongs_to :author
+  # state =&gt; ['live', 'hold', 'sold']
+end
+</code></pre>
+<p>Currently the author model does not have a &lsquo;state&rsquo;, I was in a situation where I wanted to be able to find out if an author was on &#39;sale&rsquo;. By that I mean, if the author has any associated books with the state of &#39;live&rsquo;. My first thought was, it would either involve a resource heavy loop (this is espcially true if the author has thousands of books), or it would involve a hard to implement and difficult to reuse SQL statement. Both of which did not seem particualaly apealing.</p>
+
+<p>I decided the best thing to do is add a boolean field to the <code>Author</code> model named <code>listed_for_sale</code>, this field would then be updated each time a book was created, updated or deleted. Doing it this way would make it easy to find out if an author is on sale or not by simply calling <code>listed_for_sale?</code> which would return true/false.</p>
+
+<p>So I added the field <code>listed_for_sale</code> to the author model:</p>
+<pre class="highlight plaintext"><code>rails g migration AddListedForSaleColumnToAuthor listed_for_sale:boolean
+# I then added a default value by appending the below to the add_column call
+default: false
+rake db:migrate
+</code></pre>
+<p>Then I add the following to the models:</p>
+<pre class="highlight plaintext"><code># app/models/author.rb
+
+def update_listed_for_sale!
+  state = books.any? { |book| book.state == 'live' }
+  self.listed_for_sale = state
+  self.save
+end
+
+# app/models/book.rb
+
+after_commit :update_book_author
+
+def update_book_author
+  author.update_listed_for_sale!
+end
+
+</code></pre>
+<p>The problem with the above code is that it will update the field regardless of whether the field has changed in value or not. So I needed to add a check to the <code>update_listed_for_sale!</code> method so that it is only updated when really necessary. I altered the method to look like the below:</p>
+<pre class="highlight plaintext"><code># app/models/author
+
+def update_listed_for_sale!
+  state = books.any? { |book| book.state == 'live' }
+  self.listed_for_sale = state
+  self.save if self.listed_for_sale_changed?
+end
+
+</code></pre>
+<p>I wrote a quick test and ran the test suite, and it worked successfully. However something didn&rsquo;t feel right. I looked at the method on author, although it does exactly what it is meant to do, it just felt clunky or un ruby like. So I did some exploration and played around with the console. That is when I found <code>update_attributes</code>, I had used this previously to update the attributes of a model without having to explicitly call save. However there seems to be an awesome bit of sugar lying the the depths of the method which I don&rsquo;t feel is documented well enough. It does the exact same check I am after. I.e. It will only update the field if the field has changed in value. That meant I was able to go ahead and reduce the method to one line:</p>
+<pre class="highlight plaintext"><code># app/models/author.rb
+
+def update_listed_for_sale!
+  update_attributes(:listed_for_sale, books.any? { |book| book.state == 'live' })
+end
+</code></pre>
+<p>Pretty neat right? So there you go, go ahead and use update_attributes whenever you can, it&rsquo;s just one of many places where rails has got your back!</p>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover prev read-next-story' href='/2015/12/31/ruby-around-aliases/'>
+<section class='post'>
+<h2>My love affair with Ruby around aliases</h2>
+<p>Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>

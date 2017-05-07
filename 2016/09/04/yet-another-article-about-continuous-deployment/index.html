@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: Yet another article about continuous deployment</title>
+<meta content='I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out there about continuous deployment. But this one i...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='Yet another article about continuous deployment' property='og:title'>
+<meta content='I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out there about continuous deployment. But this one i...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2016/09/04/yet-another-article-about-continuous-deployment/' property='og:url'>
+<meta content='http://blog.simonfl3tcher.com/images/yet-another-article-about-continuous-deployment-cover.jpg' property='og:image'>
+<meta content='2016-09-04' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='Yet another article about continuous deployment' name='twitter:title'>
+<meta content='I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out there about continuous deployment. But this one i...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2016/09/04/yet-another-article-about-continuous-deployment/' name='twitter:url'>
+<meta content='http://blog.simonfl3tcher.com/images/yet-another-article-about-continuous-deployment-cover.jpg' name='twitter:image:src'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header post-head' style='background-image: url(/images/yet-another-article-about-continuous-deployment-cover.jpg)'>
+<nav class='clearfix main-nav overlay'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>Yet another article about continuous deployment</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2016-09-04'>
+04 September 2016
+</time>
+on <a href='/tag/best-practices/'>Best Practices</a>
+</section>
+</header>
+<section class='post-content'><p>I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out there about continuous deployment. But this one is slightly different. It is about my exploration of continuous deployment from beginning to end. This article is not about the concept of continuous deployment. It is about the pros and cons of it and how to go about implement. Some people may say, more of a &ldquo;practical guide&rdquo; to continuous deployment.</p>
+
+<p>A while back I was tech leading a project. The deployment was becoming problematic on a weekly basis. As any other developer would do, I started out to try and solve the problem.</p>
+
+<p>The current deployment process was simple but old school. Each week, we would merge the work that had been completed that week into a QA branch. It was then that we would deploy the QA branch to a QA environment and the QA environment to production. This was all done on a Friday 😨.</p>
+
+<p>There is a reasoning behind this trust me. We didn&rsquo;t decide to go against the status quo because we thought it would be a good idea. We did this for the following reasons:</p>
+
+<p>1) We had been deploying weekly (successfully) before launch.</p>
+
+<p>2) We had been deploying on a Friday before launch as it was the best fit for the business team.</p>
+
+<p>3) We had a QA team which performed QA tasks on all the new work going into production on a weekly sprint.</p>
+
+<p>Before launch, downtime was not such a big factor. It was only the business team that were affected. At the time, this way of deploying was considering <em>OK</em> by the rest of the team and me.</p>
+
+<p>Post launch, this became a huge problem. With customers on the site. Potential critical bugs and crashes in the system were the highest risks. Our deployment process stayed the same. Yes, I can attest, it quickly became problematic. We tried to streamline and fine-tune the process as best we could. No matter what we did, it was still a massive headache. All of this meant that deployment days became dreaded. Anxiety was high. Hotfixes were rife.</p>
+
+<p><strong><em>There has to be a better way?</em></strong></p>
+
+<p>I knew of continuous delivery/deployment. I have even employed it on a small scale project. Projects where bugs and critical errors were less problematic. But, this project was a large project where the whole business revolved around it. So did we want to start deploying daily or even hourly? I set out to look at continuous deployment. With the simple question: would continuous deployment ease the issues we are having?</p>
+
+<h3>Problems</h3>
+
+<p>Below is a table of the problems we were having and a description of why they are problems.</p>
+
+<table><thead>
+<tr>
+<th>Problem</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Anxiety</strong></td>
+<td>The fewer the deployments, the more cause for concern around whether the deployment will be successful. This causes anxiety and stress. More anxiety becomes more apparent as more and more code gets deployed in one deployment.</td>
+</tr>
+<tr>
+<td><strong>Reliability</strong></td>
+<td>The onus is on a single developer to undertake deployment. It is likely that you would automate this, but this can never fully be automated with things like tasks having to be run as a one-off.</td>
+</tr>
+<tr>
+<td><strong>Hitting the deployment deadline</strong></td>
+<td>We had a single day to deploy; this puts pressure on the development team to make quick fixes that come back from QA to deploy on time.</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Deployment becomes massive once the development team scales. More work being done == more code to deploy.</td>
+</tr>
+<tr>
+<td><strong>Failing Deployments</strong></td>
+<td>If a deployment fails to deploy, you then have to try and figure out the problem. The failure is potentially a piece of work that could have been done two weeks ago.</td>
+</tr>
+<tr>
+<td><strong>QA Isolation</strong></td>
+<td>The QA branch is tested as a group of changes, if any of these changes fail we have to remove the commit that introduced that failure - sounds okay in theory, this is tough in practice. This is especially true when you have a huge amount of changes. Even then, you have no guarantee that by removing that piece of code you will not introduce further bugs.</td>
+</tr>
+<tr>
+<td><strong>QA Efficiency</strong></td>
+<td>In general the above means that QA needs to be completed early in the week. If we did not do this, it would mean that deployment would likely slip. It also puts pressure on the QA team; this is not ideal considering they are doing *quality* assurance.</td>
+</tr>
+<tr>
+<td><strong>Missing Deployment</strong></td>
+<td>To miss a weekly deploy means that the next week becomes even more stressful. As a result, we take the time to fix those issues instead of focusing on feature building.</td>
+</tr>
+<tr>
+<td><strong>Hotfixing</strong></td>
+<td>If there is a problem in production which needs a hotfix, it does not go through the same process. Why is this a problem? Because every piece of code should be tested as thoroughly as each other, but hotfixes are not because it would mean waiting a week for a deployment.</td>
+</tr>
+<tr>
+<td><strong>Old work</strong></td>
+<td>Problems with work that was done nearly two weeks ago can become a problem at deployment time and take a lot longer to fix.</td>
+</tr>
+</tbody></table>
+
+<h3>Can continuous deployment be our saviour?</h3>
+
+<p>So after writing out the pain point around the current deployment process - of which there are more than I thought. I set out to look at how continuous deployment could potentially help solve these problems.</p>
+
+<table><thead>
+<tr>
+<th>Problem</th>
+<th>Fix</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Anxiety</strong></td>
+<td>Continuous deployment removes the worry and ceremony around deployment because you can be confident that the testing stages will have picked up any problems. If the work does get to production and there are problems, we can simply switch off the feature flag. Or rollback that tiny commit.</td>
+</tr>
+<tr>
+<td><strong>Reliability</strong></td>
+<td>With continuous deployment, anyone can deploy at the click of a button; it is not reliant on one person anymore. You can get into a position where you are so confident with your deployment strategy that you can click the merge button on the way to the pub on a Friday night. You can almost be certain that that fix will be OK to be deployed and if not, it is a small rollback.</td>
+</tr>
+<tr>
+<td><strong>QA Isolation</strong></td>
+<td>Changes can be tested in 100% isolation and potentially on production. Who would not want that?</td>
+</tr>
+<tr>
+<td><strong>QA efficiency</strong></td>
+<td>QA inefficiency is no longer a problem; we would no longer have to wait a week (at best) to get the feature into production. We can just merge it the day it passes.</td>
+</tr>
+<tr>
+<td><strong>Missing Deployment</strong></td>
+<td>Missing deployment is now a non-event - there is no deployment deadline.</td>
+</tr>
+<tr>
+<td><strong>Deployment is done on everyday</strong></td>
+<td>Deployment happens all day, every day.</td>
+</tr>
+<tr>
+<td><strong>Hotfixing</strong></td>
+<td>There is no notion of a hotfix; it is just a bug fix which goes through the standard deployment process.</td>
+</tr>
+<tr>
+<td><strong>Old work</strong></td>
+<td>The changes are fresh in the developer&rsquo;s mind because they have done them on the same day they are deployed. Any problems could be cleaned up a lot quicker than if a feature was deployed two weeks after the work was completed.</td>
+</tr>
+<tr>
+<td><strong>Rollback</strong></td>
+<td>Rolling back changes that cause problems is much much easier because it is a small chuck of code that has changed as opposed to a bunch of features being merged.</td>
+</tr>
+<tr>
+<td><strong>Non Event</strong></td>
+<td>Deployment now becomes an everyday event.</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Continuous deployment means that you can scale the development team without the worry of a huge change getting made on a single day.</td>
+</tr>
+<tr>
+<td><strong>Feature Conflicts</strong></td>
+<td>Conflicts are no longer problematic because no large feature branches are running around.</td>
+</tr>
+<tr>
+<td><strong>Deployment and Release segregation</strong></td>
+<td>The deployment will not mean the release of a feature, which again means less stress around rolling features out. There is no crossing your fingers and hoping for the best. You can test the feature on production behind a feature flag.</td>
+</tr>
+</tbody></table>
+
+<h3>It&rsquo;s not all blue skies and empty lanes</h3>
+
+<p>As with anything in tech, there is no silver bullet. And continuous deployment is not about to change that; it comes with its caveats.</p>
+
+<p><strong>Functional conflicts</strong> - Say you have two pieces of work deployed one after the other. How can you be sure that the work will not &ldquo;conflict&rdquo;? i.e. you change the route to the sign-up page, but someone else creates a button that links to the old sign up page.</p>
+
+<p><strong>Crashes in production</strong> - More deployments? higher the opportunity for a crash in production.</p>
+
+<p><strong>Management Headaches</strong> - It can introduce a new group of pain points. From a technical management perspective, comprehension becomes a lot more difficult.</p>
+
+<p><strong>It&rsquo;s a change in mindset</strong> - The way that you think about building software changes, you now need to support multiple features essentially doing the same thing. You then need to remember which part of the codebase belongs to which feature.</p>
+
+<h3>Steps to take to put in place continuous deployment</h3>
+
+<p>Soon after weighing up the pros and cons up, it became apparent to me that continuous deployment wasn&rsquo;t going to be my knight in shining armor, <em>but</em>, it would certainly reduce some of the anxiety we had on a weekly basis.</p>
+
+<p>It was going to cause further overhead to begin with, but it felt like something we were willing to invest in if we were to get the benefit of working on features and less on deployment preparation.</p>
+
+<p>With that in mind, I set out to describe a list of things that are required to embrace continuous deployment entirely. I came up with the following list:</p>
+
+<p><strong>Testing</strong></p>
+
+<ul>
+<li><p>There should be automated acceptance testing with the use of something like <a href="http://nightwatchjs.org/" rel="nofollow">Nightwatch.js</a>.</p></li>
+<li><p>Because we had a QA team, I decided there should be a specific stage of QA testing by the QA team.</p></li>
+<li><p>There should be a particular stage for Acceptance Testing by the Product Owner. This is only applicable when the feature is complete.</p></li>
+</ul>
+
+<p><strong>Documenting issues</strong> - We as a team should document exactly how features and bugs should be tested and what features may be affected by the change. We needed to make sure that if we were changing the sign-up flow, the old flow still worked until the new flow was complete.</p>
+
+<p><strong>Trunk Based Development</strong> - Arguably the most extreme change in the short term but worth it, I promise you.</p>
+
+<ul>
+<li><p><strong>What is TBD</strong> - In trunk-based development (TBD), developers always check into one branch, typically the <code>master</code> branch also called the “mainline” or “trunk.” You almost never create long-lived branches and as developer, check in as frequently as possible to the master — <strong>at least few times a day.</strong></p></li>
+<li><p><strong>How will it solve conflicts?</strong> - Checking into the &ldquo;trunk&rdquo; often means that merge conflicts if any are small and there is no reason to hold back on refactoring. Troubleshooting test failures or defects becomes easier when the change-set is small.</p></li>
+<li><p><strong>Small, incremental changes over big bang changes</strong> - Frequent small changes are less risky, easier to integrate with and easier to rollback.</p></li>
+<li><p><strong>Feature Toggling</strong> - We should be shipping small chucks of work as quickly as possible. We can hide behind feature flags before we are confident in releasing them to QA, UAT, and customers.</p>
+
+<ul>
+<li><em>DB updates (specifically validations)</em> - is the hardest problem to solve with continuous deployment. If you add a validation behind a flag, this could cause problems for users that do not have that flag switched on. From my research, it is clear that the approach around this is to widen the API and then scale down the API as the flag becomes irrelevant. Let me give you an example of what I mean: say I have a model called <code>User</code> and it has <code>first_name</code> and <code>last_name</code> columns. We want to update the model just to have <code>full_name</code> (which has a <code>NOT NULL</code> constraint on the DB) and remove the <code>first_name</code> and <code>last_name</code> fields for this new column. You would have to take this approach in steps instead of one big feature change.</li>
+</ul></li>
+</ul>
+<pre class="highlight plaintext"><code>  1. Add the `full_name` column to the DB and deploy.
+
+  2. Add a background task to migrate the data from `first_name` and `last_name` into `full_name` and deploy.
+
+  3. Update the codebase to insert the data to the `full_name` at the same time as `first_name` &amp; `last_name` and deploy.
+
+  4. Add the DB `NOT NULL` constraint and deploy.
+
+  5. Reveal the flag over time.
+
+  6. Once the flag is no longer necessary, remove the update to the codebase that we made on point 3.
+
+  7. Remove the `first_name` and `last_name` fields.
+</code></pre>
+<p><strong>Agreement</strong> - for this to work we all needed to agree that this is the best deployment strategy as it&rsquo;s an entire culture and shift in mindset.</p>
+
+<h3>Business Benefits</h3>
+
+<p>While on my quest to find out is continuous deployment was right for us. I discovered that it is not only the tech team that would benefit from continuous deployment. The business as a whole could benefit from it as well.</p>
+
+<p><strong>Quick Feedback</strong> - You can get features in front of users in a matter of hours, and you can segregate these users which means you can receive useful feedback from the customers that matter the most.</p>
+
+<p><strong>Development team morale</strong> - massively overlooked, but having a deployment day induces an enormous amount of stress and anxiety on the development team. If we can reduce this and make sure that they are focusing on features, the quality of the work is going to be of a higher standard.</p>
+
+<p><strong>Developers get to develop</strong> - Developers want to develop, they do not want to be sat fixing a deploy which failed. At the same time, it would result in the business spending less money on things getting fixed and more money on features.</p>
+
+<p><strong>QUALITY Assurance</strong> - QA can do their job where they are testing the quality of the code and focus on edge cases as opposed to just trying to produce simple errors, or worse wait around for the development team to deploy to the QA app.</p>
+
+<h3>Wrapping up</h3>
+
+<p>After writing this up, it was clear that this was going to prove beneficial to us as a team but also the client as a business. We pitched it to the customer (I work for an <a href="https://mintdigital.com/" rel="nofollow">Agency</a>), they decided that it was not something that they wanted to explore. You win some you; you lose some I guess.</p>
+
+<p>It was not all lost because, internally, we are all agreed that this is the right route from here on out and we will be employing continuous deployment across the board for any new application.</p>
+
+<p>UPDATE: We have since gone on to successfully employ this on multiple projects: <a href="http://www.deskcamping.com/" rel="nofollow">Deskcamping</a> &amp; <a href="https://www.workman.com/" rel="nofollow">Workman</a></p>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover read-next-story' href='/2015/12/31/ruby-around-aliases/'>
+<section class='post'>
+<h2>My love affair with Ruby around aliases</h2>
+<p>Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the&hellip;</p>
+</section>
+</a>
+<a class='read-next-story prev' href='/2016/11/15/the-10-commandments-of-a-readme/' style='background-image: url(/images/the-10-commandments-of-a-readme-cover.jpg)'>
+<section class='post'>
+<h2>The 10 commandments (guidelines) of a README</h2>
+<p>This article is less about attracting people to use an open-source project. Or having the most attractive README. But&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>

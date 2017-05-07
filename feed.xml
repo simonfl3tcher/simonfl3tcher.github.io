@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>SIMONFL3TCHER</title>
+  <subtitle>The ramblings of a developer currently writing code on behalf of @mintdigital. Writes mostly about Javascript, Ruby, GO and current tech trends.</subtitle>
+  <id>http://blog.simonfl3tcher.com</id>
+  <link href="http://blog.simonfl3tcher.com"/>
+  <link href="http://blog.simonfl3tcher.com/feed.xml" rel="self"/>
+  <updated>2017-03-29T01:00:00+01:00</updated>
+  <author>
+    <name>Simon Fletcher</name>
+  </author>
+  <entry>
+    <title>Cross-functional Mobbing</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/03/29/cross-functional-mobbing/"/>
+    <id>http://blog.simonfl3tcher.com/2017/03/29/cross-functional-mobbing/</id>
+    <published>2017-03-29T01:00:00+01:00</published>
+    <updated>2017-05-07T12:28:05+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">The full article was written and posted on Medium on behalf of Mint Digital. This article describes my time in attempting to hack Mob Programming to include the entire product team.
+
+Original Article:
+
+Cross-functional Mobbing
+</summary>
+  </entry>
+  <entry>
+    <title>An opinionated react Progressive Web App repository</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/02/26/an-opinionated-react-progressive-web-app-repository/"/>
+    <id>http://blog.simonfl3tcher.com/2017/02/26/an-opinionated-react-progressive-web-app-repository/</id>
+    <published>2017-02-26T00:00:00+00:00</published>
+    <updated>2017-05-07T12:41:00+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">Over the past week or so I have been working on understanding the ins and outs of Progressive Web Apps. In this endeavour, I decided that I would create my very own (very opinionated) repository full of all the tools that I need to create a quick and</summary>
+  </entry>
+  <entry>
+    <title>I wrote a facial rekognition app in under two hours *</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/02/08/i-wrote-a-facial-rekognition-app-in-under-two-hours/"/>
+    <id>http://blog.simonfl3tcher.com/2017/02/08/i-wrote-a-facial-rekognition-app-in-under-two-hours/</id>
+    <published>2017-02-08T00:00:00+00:00</published>
+    <updated>2017-05-07T12:21:32+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">The full article was written and posted on Medium on behalf of Mint Digital. This article describes my time and findings when playing around with AWS Rekognition.
+
+You can see the outcome on the Nuclear Codes repository that was made to accompany the</summary>
+  </entry>
+  <entry>
+    <title>My Alexa Skill workflow (Part 2/2)</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/01/25/my-alexa-skill-workflow-part-2/"/>
+    <id>http://blog.simonfl3tcher.com/2017/01/25/my-alexa-skill-workflow-part-2/</id>
+    <published>2017-01-25T00:00:00+00:00</published>
+    <updated>2017-05-07T12:14:32+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">Hello, and thank you for coming back for part two. If you haven’t read part one of this guide, you can find it here. Alternatively, if you just want to skip part one, go ahead and clone the repository.
+
+In part one we created the codebase for our skill</summary>
+  </entry>
+  <entry>
+    <title>My Alexa Skill workflow (Part 1/2)</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2017/01/24/my-alexa-skill-workflow-part-1/"/>
+    <id>http://blog.simonfl3tcher.com/2017/01/24/my-alexa-skill-workflow-part-1/</id>
+    <published>2017-01-24T00:00:00+00:00</published>
+    <updated>2017-05-07T12:12:07+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">It’s no secret; voice UI is one of the things that get my development juices flowing right now. For over six years I have been developing for the “traditional” web environment (the browser), and it’s refreshing to get your teeth into something new and</summary>
+  </entry>
+  <entry>
+    <title>The 10 commandments (guidelines) of a README</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/"/>
+    <id>http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/</id>
+    <published>2016-11-15T00:00:00+00:00</published>
+    <updated>2017-05-07T12:03:06+01:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get people up and running on a production app. And contributing work as soon as possible. The act of increasing</summary>
+  </entry>
+</feed>

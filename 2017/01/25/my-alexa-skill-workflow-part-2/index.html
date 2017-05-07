@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: My Alexa Skill workflow (Part 2/2)</title>
+<meta content='Hello, and thank you for coming back for part two. If you haven’t read part one of this guide, you can find it here. Alternatively, if you just ...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='My Alexa Skill workflow (Part 2/2)' property='og:title'>
+<meta content='Hello, and thank you for coming back for part two. If you haven’t read part one of this guide, you can find it here. Alternatively, if you just ...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2017/01/25/my-alexa-skill-workflow-part-2/' property='og:url'>
+<meta content='http://blog.simonfl3tcher.com/images/my-alexa-skill-workflow.jpg' property='og:image'>
+<meta content='2017-01-25' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='My Alexa Skill workflow (Part 2/2)' name='twitter:title'>
+<meta content='Hello, and thank you for coming back for part two. If you haven’t read part one of this guide, you can find it here. Alternatively, if you just ...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2017/01/25/my-alexa-skill-workflow-part-2/' name='twitter:url'>
+<meta content='http://blog.simonfl3tcher.com/images/my-alexa-skill-workflow.jpg' name='twitter:image:src'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header post-head' style='background-image: url(/images/my-alexa-skill-workflow.jpg)'>
+<nav class='clearfix main-nav overlay'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>My Alexa Skill workflow (Part 2/2)</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2017-01-25'>
+25 January 2017
+</time>
+on <a href='/tag/aws/'>AWS</a>, <a href='/tag/javascript/'>Javascript</a>
+</section>
+</header>
+<section class='post-content'><p>Hello, and thank you for coming back for part two. If you haven’t read part one of this guide, you can find it <a href="https://blog.simonfl3tcher.com/so-you-want-to-build-your-own-alexa-skill-part-1" rel="nofollow">here</a>. Alternatively, if you just want to skip part one, go ahead and clone the <a href="https://github.com/simonfl3tcher/spacefact" rel="nofollow">repository</a>.</p>
+
+<p>In part one we created the codebase for our skill, but testing the skill needs to be done locally. Wouldn&rsquo;t it be cool, if we could get it running on an alexa device and show all our friends what we have done? That is what we are going to do in this article.</p>
+
+<p>The first thing we need to do is create a zip of our skill to upload to AWS. Go to the skill directory on your machine and zip up the contents. Make sure you only zip up the contents and not the directory itself. I tend to do the following from inside the skill&rsquo;s directory:</p>
+<pre class="highlight plaintext"><code>zip -r spacefact.zip .
+</code></pre>
+<p>Next, as we are going to be using AWS Lambda to &ldquo;host&rdquo; our skill, the first thing we need to do is log into our AWS account. If you haven&rsquo;t got an AWS account, you can quickly set one up <a href="https://aws.amazon.com/account/" rel="nofollow">here</a>. At the moment ASK only supports two regions <strong>US East (N. Virginia)</strong> or <strong>EU (Ireland)</strong>. Make sure that you choose one of these regions from the region dropdown in the top right of the console.  Once you have decided, make a mental note of which one you chose as this will come to be important when we hook up the lambda to skill - sounds confusing I know, but it will become apparent soon.</p>
+
+<p>With your region selected, click <em>services</em> on the top right and choose <em>Lambda</em> from under the &ldquo;Compute&rdquo; heading.</p>
+
+<p><img src="/images/1-copy.png" alt="AWS Services Screenshot" /></p>
+
+<p>Click <em>Get started</em> or <em>Create a Lambda function</em> depending on whether you have used Lambda before. Then, select <em>Blank Function</em> from the blueprint options.</p>
+
+<p><img src="/images/2-copy.png" alt="AWS Select blueprint screenshot" /></p>
+
+<p>You will then be asked to add a trigger for your Lambda. You can choose to set this up at a later date, but as we know what we want, we are going to go ahead and choose <em>Alexa Skill Kit</em> from the integrations drop down.</p>
+
+<p><img src="/images/3-copy.png" alt="AWS Configure triggers screenshot" /></p>
+
+<p>Finally, you will be asked to configure the function itself. Add the following for the options:</p>
+
+<ul>
+<li>Name: mySpaceFact</li>
+<li>Description: Tells you a fact about one of three planets - Mercury, Venus, and Earth.</li>
+<li>Runtime: Node.js 4.3</li>
+</ul>
+
+<p>Under the &ldquo;Lambda function code&rdquo; heading, choose to <em>Upload a .ZIP file</em> from the &ldquo;Code entry type&rdquo; title. Proceed to click the <em>Upload</em> button, find and select the zip file we created.</p>
+
+<p>Next, under the &ldquo;Lambda function handler and role&rdquo; heading, choose <em>Choose an existing role</em> from the &ldquo;Role&rdquo; option, from there you can choose <em>lambda<em>basic</em>execution</em> from the &ldquo;Existing role&rdquo; heading. You may need to create this role if you have a brand new AWS account. In which case I would choose <em>Create a custom role</em>.</p>
+
+<p>You should end up with something similar to this:</p>
+
+<p><img src="/images/4-copy-2.png" alt="AWS Configure Function screenshot" /></p>
+
+<p>Click <em>Next</em>, then click <em>Create function</em> on the review page. You should land on a page which looks the same as this:</p>
+
+<p><img src="/images/5-copy.png" alt="AWS Lambda Overview" /></p>
+
+<p>Before we go on to associate the Lambda function with the skill, let&rsquo;s add a test case for our lambda. Click the <em>Actions</em> button and select <em>Configure test event</em>. A modal will be displayed which looks similar to this:</p>
+
+<p><img src="/images/Screenshot-2017-01-20-10.09.10.png" alt="AWS Lambda testing modal screenshot" /></p>
+
+<p>Paste the contents below into the editor and click <em>Save and test</em>.</p>
+<pre class="highlight plaintext"><code>{
+  "version": "1.0",
+  "session": {
+    "new": true,
+    "sessionId": "amzn1.echo-api.session.abeee1a7-aee0-41e6-8192-e6faaed9f5ef",
+    "application": {
+      "applicationId": "amzn1.echo-sdk-ams.app.000000-d0ed-0000-ad00-000000d00ebe"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+    }
+  },
+  "request": {
+    "type": "LaunchRequest",
+    "requestId": "amzn1.echo-api.request.9cdaa4db-f20e-4c58-8d01-c75322d6c423",
+    "timestamp": "2015-05-13T12:34:56Z"
+  }
+}
+</code></pre>
+<p>(This is copied from  <code>http://localhost:8080/alexa/spacefact</code>)</p>
+
+<p>You should then see &ldquo;Execution result: succeeded&rdquo; at the bottom of your screen. The response to this <code>LaunchRequest</code> should look something similar to the below:</p>
+
+<p><img src="/images/7-copy.png" alt="AWS Lambda testing response screenshot" /></p>
+
+<p>If the execution result failed, make sure your tests are passing, and your local testing is producing the expected result.</p>
+
+<p>OK, so we now have our working Lambda function with a test configured. Before we go any further, copy the ARN from the top right of the screen, we will need this to associate the skill with the Lambda function.</p>
+
+<p><img src="/images/8-copy.png" alt="AWS Lambda ARN Screenshot" /></p>
+
+<p>Next, we need to head over to <a href="https://developer.amazon.com/" rel="nofollow">https://developer.amazon.com/</a>, click <em>Sign In</em> from the top right. Now, this step is critical, if you want to get the skill working on your Alexa (which is, after all, what we are looking to do in this article). You <strong>need</strong> to make sure that you create a developer account with the Amazon account that is associated with your Alexa. Obviously, this is not true if we were going to publish the skill, but that is outside the scope of this article, so we have to associate the skill with the Alexa we want to use for testing.</p>
+
+<p>Click <em>Alexa</em> from the navigation:</p>
+
+<p><img src="/images/9-copy.png" alt="Amazon Developer Console screenshot" /></p>
+
+<p>Click <em>Get Started</em> under the &ldquo;Alexa Skills Kit&rdquo; option.</p>
+
+<p><img src="/images/Screenshot-2017-01-21-13.36.26.png" alt="Amazon Developer Console Alexa Skills Kit Screenshot" /></p>
+
+<p>Next, click <em>Add a New Skill</em> located at the top right of the screen. You will then presented with a form which allows you to start creating your new Alexa skill.</p>
+
+<p>Fill out the form with the following information:</p>
+
+<ul>
+<li>Skill Type: Custom Interaction Model</li>
+<li>Language: This depends on the region you selected when you set up your Lambda. As I picked <em>EU (Ireland)</em> I am choosing <strong>English (U.K.)</strong>, if you opted for <em>US East (N. Virginia)</em> make sure you choose <strong>English (U.S.)</strong>.</li>
+<li>Name: SpaceFact</li>
+<li>Invocation Name: space fact</li>
+</ul>
+
+<p>Your page should look like the below:</p>
+
+<p><img src="/images/11-copy.png" alt="Amazon Developer Create new Alexa Skill screenshot" /></p>
+
+<p>Click <em>Next</em>. We are then presented with a page for the &ldquo;Interaction Model&rdquo; information. Copy the following for the <em>Intent Schema</em> input.</p>
+<pre class="highlight plaintext"><code>{
+  "intents": [
+    {
+      "intent": "planetFact",
+      "slots": [
+        {
+          "name": "WORD",
+          "type": "POSSIBLEWORDS"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.StopIntent",
+      "slots": []
+    }
+  ]
+}
+</code></pre>
+<p>(This is copied from <code>http://localhost:8080/alexa/spacefact</code>)</p>
+
+<p>Then, click <em>Add Slot Type</em>. Add the following for the inputs.</p>
+
+<ul>
+<li>Enter Type: POSSIBLEWORDS</li>
+<li>Enter Values: Mercury | Venus | Earth</li>
+</ul>
+
+<p>Finally, add the following for the <em>Sample Utterances</em> input. You may have more depending on whether you added more utterances in part one.</p>
+<pre class="highlight plaintext"><code>planetFact    tell me about {WORD}
+planetFact    tell us about {WORD}
+planetFact    {WORD}
+</code></pre>
+<p>(This is copied from  <code>http://localhost:8080/alexa/spacefact</code>)</p>
+
+<p>Your page should look like the below:</p>
+
+<p><img src="/images/12-copy-copy.png" alt="Amazon Developer Skill Interaction Model Screenshot" /></p>
+
+<p>Click <em>Next</em>. We will then see a page for the &ldquo;Configuration&rdquo; information. This part is easy, select <em>AWS Lambda ARN (Amazon Resource Name)</em> for the &ldquo;Service Endpoint Type&rdquo; option, chose the region you are working in and then paste the ARN we copied from our Lambda earlier.</p>
+
+<p>Your page should look similar to the below:</p>
+
+<p><img src="/images/14-copy.png" alt="Amazon Developer Skill Configuration screenshot" /></p>
+
+<p>Click <em>Next</em>. You can then use this page to test your skill OR you can use Alexa itself. If you go the Alexa app on your phone and visit &ldquo;Your Skills&rdquo; you should see your <code>SpaceFact</code> skill in the list. If you are seeing this, it confirms that your skill has been set up successfully. It should look something similar to this:</p>
+
+<p><img src="/images/Screenshot-2017-01-21-14.20.02.png" alt="Alexa App SpaceFact screenshot" /></p>
+
+<p>There you have it, you have now added your skill to Alexa (albeit in a development environment.) Now, go and have fun with your skill, here are some sample expressions you could say to Alexa:</p>
+
+<p><em>&ldquo;Alexa run space fact&rdquo;</em></p>
+
+<p><em>&ldquo;Alexa start space fact&rdquo;</em></p>
+
+<p><em>&ldquo;Alexa ask space fact&rdquo;</em></p>
+
+<h3>Want to do more?</h3>
+
+<p>Try adding more built-in Intents. At the moment, if you asked our skill for help it would return the <code>IntentRequest</code> response. Returning this response is not very useful when you are asking for help. ASK defines built-in intents for handling standard intents like &ldquo;help&rdquo; and &ldquo;stop&rdquo;. Visit <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/implementing-the-built-in-intents#Available%20Built-in%20Intents" rel="nofollow">this</a> for a push in the right direction. To publish your skill, you are required to handle these built-in intents, so it is worth investing your time in looking into these properly if you are planning to publish a skill shortly.</p>
+
+<p>Initially, I was going to write a third and final article around automatic the deployment of your Lambda. I have since found <a href="http://docs.aws.amazon.com/lambda/latest/dg/automating-deployment.html" rel="nofollow">this</a> article published by AWS about how to do it. I would highly recommend running through the article and substituting where necessary, things like <code>bucket-name</code> and <code>project-name</code> for <code>space-fact</code>. One thing to be aware of, this will create a whole new Lambda which will not be hooked up to your skill. Once you have run through the article and the Lambda is set up don&rsquo;t forget to update the ARN on your skill config in <a href="https://development.amazon.co.uk" rel="nofollow">development.amazon.co.uk</a>.</p>
+
+<p>There you have it, go and improve the world by making something truly amazing and innovative with Voice UI.</p>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='read-next-story' href='/2017/01/24/my-alexa-skill-workflow-part-1/' style='background-image: url(/images/my-alexa-skill-workflow.jpg)'>
+<section class='post'>
+<h2>My Alexa Skill workflow (Part 1/2)</h2>
+<p>It&rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For&hellip;</p>
+</section>
+</a>
+<a class='read-next-story prev' href='/2017/02/08/i-wrote-a-facial-rekognition-app-in-under-two-hours/' style='background-image: url(/images/i-wrote-a-facial-rekognition-app-in-under-two-hours.jpg)'>
+<section class='post'>
+<h2>I wrote a facial rekognition app in under two hours *</h2>
+<p>The full article was written and posted on Medium on behalf of Mint Digital. This article describes my time&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>

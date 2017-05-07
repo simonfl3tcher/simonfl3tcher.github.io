@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: My Alexa Skill workflow (Part 1/2)</title>
+<meta content='It&amp;rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For over six years I have been developing ...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='My Alexa Skill workflow (Part 1/2)' property='og:title'>
+<meta content='It&amp;rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For over six years I have been developing ...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2017/01/24/my-alexa-skill-workflow-part-1/' property='og:url'>
+<meta content='http://blog.simonfl3tcher.com/images/my-alexa-skill-workflow.jpg' property='og:image'>
+<meta content='2017-01-24' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='My Alexa Skill workflow (Part 1/2)' name='twitter:title'>
+<meta content='It&amp;rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For over six years I have been developing ...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2017/01/24/my-alexa-skill-workflow-part-1/' name='twitter:url'>
+<meta content='http://blog.simonfl3tcher.com/images/my-alexa-skill-workflow.jpg' name='twitter:image:src'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header post-head' style='background-image: url(/images/my-alexa-skill-workflow.jpg)'>
+<nav class='clearfix main-nav overlay'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>My Alexa Skill workflow (Part 1/2)</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2017-01-24'>
+24 January 2017
+</time>
+on <a href='/tag/aws/'>AWS</a>, <a href='/tag/javascript/'>Javascript</a>
+</section>
+</header>
+<section class='post-content'><p>It&rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For over six years I have been developing for the &ldquo;traditional&rdquo; web environment (the browser), and it&rsquo;s refreshing to get your teeth into something new and exciting but still feel more than competent.</p>
+
+<p>So with this excitement hot on the end of my fingertips, I got to work on creating my first Alexa &ldquo;skill.&rdquo; After a few attempts, I landed on a great workflow, this is what I am going to share with you over a series of blog posts.</p>
+
+<p>Javascript was my language of choice. I wanted to make use of AWS Lambda. AWS Lambda only supports Node.js, Python, Java, and C#. Being most familiar with Javascript made it and easy choice for me. Unfortunately, AWS Lambda only supports Node 4.3 and 0.10.32 which means no ES6 support right now (silently disappears into the background).</p>
+
+<p>One quick declaimer before we start, this series of articles does not explain the Alexa Skills Kit (ASK) API. If you are the kind of person that needs to know what every line of code is doing, I would strongly recommend checking out the API docs first. You can find them <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/getting-started-guide" rel="nofollow">here</a>.</p>
+
+<p>So with that out of the way, let&rsquo;s get started.</p>
+
+<p>Start off by cloning the Alexa App Server repository:</p>
+<pre class="highlight plaintext"><code>git clone git@github.com:alexa-js/alexa-app-server.git
+</code></pre>
+<p>By cloning the repository, this will allow you to run a local server which allows you to test your skill. As described in the README of the repository:</p>
+
+<blockquote>
+<p>The alexa-app-server module offers a stand-alone web server to host Alexa Apps (Skills). Think of it as a simple &ldquo;container&rdquo; that allows you to publish multiple Alexa Apps with one server easily.</p>
+</blockquote>
+
+<p>Personally, I like to separate my skills out into their individual repositories. It is a personal choice. However, it does come with added benefits like security and deployment which is not in the scope of this article. So with that in mind, I like to remove the <code>.git</code> folder from the repository - so think of this more of a directory structure where your skills will sit.</p>
+
+<p>Let&rsquo;s move into the directory, install the dependencies and then remove the <code>.git</code> file to start.</p>
+<pre class="highlight plaintext"><code>cd alexa-app-server &amp;&amp; npm install &amp;&amp; rm -Rf .git/
+</code></pre>
+<p>Once you have done that, move into the <code>examples/apps</code> directory.</p>
+<pre class="highlight plaintext"><code>cd examples/apps
+</code></pre>
+<p>You should see there are (at the time of writing this) two example skills already in this directory. You can use these for reference at a later date, but for now, we are going to create our skill from scratch.</p>
+
+<p>Let start building our skill by creating the directory your skill will live in:</p>
+<pre class="highlight plaintext"><code>mkdir spacefact &amp;&amp; cd spacefact
+</code></pre>
+<p>Next, lets go ahead and add our dependencies.</p>
+<pre class="highlight plaintext"><code>npm init
+npm install --save-dev alexa-app chai mocha
+</code></pre>
+<p>The above adds Mocha and Chai for testing which we will see in action in a bit. It also adds the <code>alexa-app</code> package, this abstracts the handling of a request from Alexa into a nice little DSL.</p>
+
+<p>That is the tedious config out of the way. Let&rsquo;s get started with creating our actual skill. Create a file called <code>space_fact.js</code> in the root directory and add the following content:</p>
+<pre class="highlight plaintext"><code>module.change_code = 1; // Reload module after change
+
+var SpaceFact = (function() {
+  var planets = {
+    'mercury': 'Mercury is the closest planet to the Sun, and due to its proximity it is not easily seen except during twilight.',
+    'venus':   'Named after the Roman goddess of love and beauty, Venus is the second largest terrestrial planet and is sometimes referred to as the Earth\'s sister planet due their similar size and mass.',
+    'earth':   'The Earth is the only planet in our solar system not to be named after a Greek or Roman deity.'
+  };
+
+  var requestPlanetFact = function(planetName) {
+    var key = planetName.toLowerCase();
+    if(key in planets) {
+      return planets[key]
+    } else {
+      return 'Sorry; I do not have a fact on the planet you are asking about';
+    }
+  };
+
+  return {
+    requestPlanetFact: requestPlanetFact
+  };
+})();
+
+module.exports = SpaceFact;
+
+</code></pre>
+<p>Here, we are creating a Revealing Module which reveals access to the <code>requestPlanetFact</code> function. This function takes one argument - a planet name. This function checks to see if it has a fact for the given planet name and returns that fact if it does. If it doesn&rsquo;t have a fact for the given planet it will swiftly return &ldquo;<em>Sorry; I do not have a fact on the planet you are asking about</em>&rdquo;.</p>
+
+<p>Next, let&rsquo;s add the test for this module. First, let&rsquo;s create the test directory and <code>cd</code> into it:</p>
+
+<p><code>mkdir test &amp;&amp; cd test</code></p>
+
+<p>Create a file called <code>space_fact_test.js</code> and add the following contents:</p>
+<pre class="highlight plaintext"><code>var chai      = require('chai');
+var expect    = chai.expect;
+var SpaceFact = require('../space_fact');
+
+describe('SpaceFact', function() {
+  describe('#requestPlanetFact', function() {
+    context('with a valid planet name', function() {
+      it('returns the fact about the planet Mercury', function() {
+        expect(
+          SpaceFact.requestPlanetFact('Mercury')
+        ).to.eq('Mercury is the closest planet to the Sun, and due to its proximity it is not easily seen except during twilight.');
+      });
+
+      it('returns the fact about the planet Venus', function() {
+        expect(
+          SpaceFact.requestPlanetFact('Venus')
+        ).to.eq(
+          'Named after the Roman goddess of love and beauty, Venus is the second largest terrestrial planet and is sometimes referred to as the Earth\'s sister planet due their similar size and mass.'
+        );
+      });
+
+      it('returns the fact about the planet Earth', function() {
+        expect(
+          SpaceFact.requestPlanetFact('Earth')
+        ).to.eq('The Earth is the only planet in our solar system not to be named after a Greek or Roman deity.');
+      });
+    });
+
+    context('with a planet name where it does not have a fact', function() {
+      it('returns Sorry; I do not have a fact on the planet you are asking about', function() {
+        expect(
+          SpaceFact.requestPlanetFact('Uranus')
+        ).to.eq('Sorry; I do not have a fact on the planet you are asking about')
+      });
+    });
+  });
+});
+
+</code></pre>
+<p>That&rsquo;s it. But before we rub our hands together and move on to the next stage lets run Mocha to test it works as expected. From the root directory run:</p>
+<pre class="highlight plaintext"><code>mocha
+</code></pre>
+<p>You should see the following output:</p>
+<pre class="highlight plaintext"><code>  SpaceFact
+    #requestPlanetFact
+      with a valid planet name
+        ✓ returns the fact about the planet Mercury
+        ✓ returns the fact about the planet Venus
+        ✓ returns the fact about the planet Earth
+      with a planet name where it does not have a fact
+        ✓ returns Sorry, I do not have a fact on the planet you are asking about
+
+
+  4 passing (9ms)
+</code></pre>
+<p>So with that out of the way we are ready can go ahead and build the &ldquo;handler.&rdquo; Let&rsquo;s create a file in the root directory called <code>index.js</code>, and add the following.</p>
+<pre class="highlight plaintext"><code>module.change_code = 1;
+
+var Alexa     = require('alexa-app');
+var app       = new Alexa.app('spacefact');
+var SpaceFact = require('./space_fact');
+</code></pre>
+<p>This first includes the <code>alexa-app</code> module. We use this to create an <em>instance</em> of the <code>alexa-app</code> module for us to use.</p>
+
+<p>The summary part of the GitHub README does a magnificent job of explaining what this module will provide to you:</p>
+
+<blockquote>
+<p>The alexa-app module does the dirty work of interpreting the JSON request from the Alexa platform and building the JSON response that can be spoken on an Alexa-compatible device, such as the Echo. It provides a DSL for defining intents, convenience methods to more easily build the response, handle session objects, and add cards.</p>
+</blockquote>
+
+<p>Then we want to handle a <code>LaunchRequest</code> sent by Alexa. Our skill receives a LaunchRequest when the user invokes the skill with the invocation name but does not provide any command mapping to an intent. Add the following to the bottom of the <code>index.js</code> file:</p>
+<pre class="highlight plaintext"><code>app.launch(function(req, res) {
+  var prompt = 'Ask me about the planet Mercury, Venus or Earth. I will give you a fact on the one you choose.';
+ res.say(prompt).reprompt(prompt).shouldEndSession(false);
+});
+</code></pre>
+<p>Next, we want to handle an <code>IntentRequest</code> sent from the Alexa platform. Our skill receives an <code>IntentRequest</code> when the user speaks a command that maps to a custom intent. You can have multiple custom intent handlers, but for now, we are going to stick with one. Add the following to the bottom of the <code>index.js</code> file:</p>
+<pre class="highlight plaintext"><code>app.intent('planetFact', {  
+ 'slots': {
+    'WORD': 'POSSIBLEWORDS'
+  },
+  'utterances': ['{tell me about | tell us about |} {-|WORD}']
+}, function(req, res) {
+  var word     = req.slot('WORD');
+  var response = SpaceFact.requestPlanetFact(word);
+  res.say(response).shouldEndSession(true).send();
+});
+</code></pre>
+<p>Next, we want to handle the built-in intent <code>AMAZON.StopIntent</code>. This intent is called when the user says &ldquo;stop&rdquo;, &ldquo;off&rdquo;, &ldquo;shut up&rdquo; or something similar. This Intent will let the user stop an action but remain in the skill or exit the skill completely, in our case we are going to exit. Add the following to the bottom of the <code>index.js</code> file:</p>
+<pre class="highlight plaintext"><code>app.intent('AMAZON.StopIntent', function(req, res) {
+  res.say("Goodbye").shouldEndSession(true);
+});
+</code></pre>
+<p>Next, we want to handle a <code>SessionEndedRequest</code> sent by the Alexa platform. Our skill receives a <code>SessionEndedRequest</code> when a currently open session is closed for one of the following reasons:</p>
+
+<ul>
+<li><p>The user says “exit.”</p></li>
+<li><p>The user does not respond or says something that does not match an intent defined in your voice interface while the device is listening for the user’s response.</p></li>
+<li><p>An error occurs.</p></li>
+</ul>
+
+<p>(taken from the ASK docs)</p>
+
+<p>Add the following to the bottom of the <code>index.js</code> file:</p>
+<pre class="highlight plaintext"><code>app.sessionEnded(function(req, res) {
+  res.say("Goodbye").shouldEndSession(true);
+});
+</code></pre>
+<p>Finally followed by:</p>
+<pre class="highlight plaintext"><code>module.exports = app;
+</code></pre>
+<p>That is it; now we are ready to go. We just need to boot up the <code>alexa-app-server</code> module and test it works as expected. From the terminal navigate back to the <code>examples</code> directory and start the node server:</p>
+<pre class="highlight plaintext"><code>node server
+</code></pre>
+<p>If everything went successfully, you should be able to visit <code>localhost:8080/alexa/spacefact</code>.</p>
+
+<p>Up until this point, you have been thinking &ldquo;What was the reason for cloning this repository first&rdquo; this is where it will come into its own. You should see a screen similar to the below:</p>
+
+<p><img src="/images/screencapture-localhost-8080-alexa-spacefact-1485042779599.png" alt="Alexa App Server Screenshot" /></p>
+
+<p>Now we can test each of our handlers in the browser.</p>
+
+<h5>LaunchRequest</h5>
+
+<p>Under the heading <em>Request</em>, choose <code>LaunchRequest</code> from the type drop down. By doing this, the app will then display the request that will be sent to our skill via the Alexa platform (this comes in handy later, when we set up our lambda.) Proceed to click <em>Send Request</em> and scroll down to the &ldquo;Response&rdquo; heading. You will see the response that will be forwarded to Alexa from our skill. With any luck you should see something similar to the below:</p>
+<pre class="highlight plaintext"><code>{
+  "version": "1.0",
+  "response": {
+    "directives": [],
+    "shouldEndSession": false,
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "&lt;speak&gt;Ask me about me about the planet Mercury, Venus or Earth. I will give you a fact on the one you choose.&lt;/speak&gt;"
+    },
+    "reprompt": {
+      "outputSpeech": {
+        "type": "SSML",
+        "ssml": "&lt;speak&gt;Ask me about me about the planet Mercury, Venus or Earth. I will give you a fact on the one you choose.&lt;/speak&gt;"
+      }
+    }
+  },
+  "sessionAttributes": {},
+  "dummy": "text"
+}
+</code></pre>
+<p>You can see _&ldquo;Ask me about me about the planet Mercury, Venus or Earth. I will give you a fact on the one you choose.&rdquo;, the response which we set up to be our response to a <code>LaunchRequest</code> in our <code>index.js</code> file:</p>
+
+<h5>IntentRequest</h5>
+
+<p>Next, under the heading <em>Request</em>, choose <code>IntentRequest</code> from the type drop down. By doing this, the app will then display another dropdown called &ldquo;Intent,&rdquo; from there, choose <code>planetFact</code>. Finally, type &ldquo;Mercury&rdquo; into the &ldquo;WORD&rdquo; input and click &ldquo;Send Request.&rdquo; Again this will produce the request sent by the Alexa platform to our skill. But the cool part about this is if you scroll down to the heading <em>Response</em> you will see the following output:</p>
+<pre class="highlight plaintext"><code>{
+  "version": "1.0",
+  "response": {
+    "directives": [],
+    "shouldEndSession": true,
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "&lt;speak&gt;Mercury is the closest planet to the Sun and due to its proximity it is not easily seen except during twilight.&lt;/speak&gt;"
+    }
+  },
+  "sessionAttributes": {},
+  "dummy": "text"
+}
+</code></pre>
+<p>Pretty neat, huh? Go ahead, type in a planet name that is neither Mercury, Venus or Earth and take a look at the response - I will wait.</p>
+
+<h4>AMAZON.StopIntent</h4>
+
+<p>Next, under the heading <em>Request</em>, choose <code>AMAZON.StopIntent</code> from the type drop down and click <em>Send Request</em>. Scroll down to the heading <em>Response</em>, and you will see the following output:</p>
+<pre class="highlight plaintext"><code>{
+  "version": "1.0",
+  "response": {
+    "directives": [],
+    "shouldEndSession": true,
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "&lt;speak&gt;Goodbye&lt;/speak&gt;"
+    }
+  },
+  "sessionAttributes": {},
+  "dummy": "text"
+}
+</code></pre>
+<h4>SessionEndedRequest</h4>
+
+<p>Finally, under the heading <em>Request</em>, choose <code>SessionEndedRequest</code> from the type drop down and click <em>Send Request</em>. Scroll down to the heading <em>Response</em>, and you will see the following output:</p>
+<pre class="highlight plaintext"><code>{
+  "version": "1.0",
+  "response": {
+    "directives": [],
+    "shouldEndSession": true,
+    "outputSpeech": {
+      "type": "SSML",
+      "ssml": "&lt;speak&gt;Goodbye&lt;/speak&gt;"
+    }
+  },
+  "sessionAttributes": {},
+  "dummy": "text"
+}
+</code></pre>
+<p>Again, exactly what we set up for our response to a <code>SessionEndedRequest</code> sent by the Alexa platform to our skill.</p>
+
+<p>So there we have it, you have built your first Alexa skill. I know, I know. I can hear cries of &ldquo;What? I at least thought I would be able to test it out on my Echo&rdquo;. Yep, that part is in the pipeline and will be part two of this series of articles so hold tight.</p>
+
+<h3>Want to do more?</h3>
+
+<ol>
+<li><p>Try adding another Custom Intent to the skill. Maybe, facts about Galaxies. As a heads up, this will mean a refactor for the <code>planetFact</code> intent and the utterances.</p></li>
+<li><p>Try adding more &ldquo;utterances&rdquo; to the <code>planetFact</code> intent. At the moment, the skill only responds to either <em>tell me about {WORD}</em>, <em>tell us about {WORD}</em> or {WORD}. Try expanding this to accompany more phrases. Visit <a href="https://github.com/alexa-js/alexa-utterances" rel="nofollow">this</a> for a push in the right direction.</p></li>
+<li><p>This post was more about the codebase rather than an in-depth explanation of the ASK API. I would recommend investing some time in understanding what is meant by Utterances, Intents, Slots, etc. Visit <a href="https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/getting-started-guide" rel="nofollow">this</a> for a push in the right direction.</p></li>
+</ol>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='read-next-story' href='/2016/11/15/the-10-commandments-of-a-readme/' style='background-image: url(/images/the-10-commandments-of-a-readme-cover.jpg)'>
+<section class='post'>
+<h2>The 10 commandments (guidelines) of a README</h2>
+<p>This article is less about attracting people to use an open-source project. Or having the most attractive README. But&hellip;</p>
+</section>
+</a>
+<a class='read-next-story prev' href='/2017/01/25/my-alexa-skill-workflow-part-2/' style='background-image: url(/images/my-alexa-skill-workflow.jpg)'>
+<section class='post'>
+<h2>My Alexa Skill workflow (Part 2/2)</h2>
+<p>Hello, and thank you for coming back for part two. If you haven’t read part one of this guide,&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>

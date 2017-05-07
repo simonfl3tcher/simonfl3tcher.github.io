@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>SIMONFL3TCHER: Ruby On Rails</title>
+  <subtitle>Posts tagged with Ruby On Rails</subtitle>
+  <id>http://blog.simonfl3tcher.com</id>
+  <link href="http://blog.simonfl3tcher.com"/>
+  <link href="http://blog.simonfl3tcher.com/tag/ruby-on-rails/feed.xml" rel="self"/>
+  <updated>2015-11-26T00:00:00+00:00</updated>
+  <author>
+    <name>Simon Fletcher</name>
+  </author>
+  <entry>
+    <title>Why I love update_attributes</title>
+    <link rel="alternate" href="http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/"/>
+    <id>http://blog.simonfl3tcher.com/2015/11/26/why-i-love-update_attributes/</id>
+    <published>2015-11-26T00:00:00+00:00</published>
+    <updated>2017-03-22T08:58:27+00:00</updated>
+    <author>
+      <name>Simon Fletcher</name>
+    </author>
+    <summary type="html">This week I am working on a project for mint digital and I came across something that inspired me to write my first of many blog posts. So without further a do lets go ahead and dive straight into some code.
+
+To begin with I had the following models:</summary>
+  </entry>
+</feed>

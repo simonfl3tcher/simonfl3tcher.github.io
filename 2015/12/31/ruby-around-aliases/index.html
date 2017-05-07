@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: My love affair with Ruby around aliases</title>
+<meta content='Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the conclusion, or rather I was pushed by fellow col...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='My love affair with Ruby around aliases' property='og:title'>
+<meta content='Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the conclusion, or rather I was pushed by fellow col...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2015/12/31/ruby-around-aliases/' property='og:url'>
+<meta content='2015-12-31' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='My love affair with Ruby around aliases' name='twitter:title'>
+<meta content='Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the conclusion, or rather I was pushed by fellow col...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2015/12/31/ruby-around-aliases/' name='twitter:url'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header no-cover post-head'>
+<nav class='main-nav clearfix'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>My love affair with Ruby around aliases</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2015-12-31'>
+31 December 2015
+</time>
+on <a href='/tag/ruby/'>Ruby</a>
+</section>
+</header>
+<section class='post-content'><p>Recently I have been dipping in and out of metaprogramming in Ruby. After a while I came to the conclusion, or rather I was  pushed by fellow colleges into believing that ruby metaprogramming is not necessary on a day to day basis, and should be used sparingly. The reason behind this is because it can be rather confusing to somebody who has a lack of experience in metaprogramming to understand what is going on. Say for example a junior developer gets assigned a project that is heavily based on metaprogramming, it will take them twice as long to work out what is going on and making changes can cause a ripple effect if you do not know what you are doing. Does the benefit on DRY become outweighed by readability at this point? I will let you draw your own conclusion on that argument.</p>
+
+<p>However there are some situations where small sprinkles of sugar can help you achieve something that, may otherwise prove difficult to achieve in a friendly fashion. Ruby&rsquo;s Around Aliases are an example of this.</p>
+
+<p>To give you a very brief overview of aliases, Ruby aliases allow you to give an
+alternate name to a method.</p>
+
+<p>An example would be:</p>
+<pre class="highlight plaintext"><code>
+class SayHello
+  def hello
+    "Hello"
+  end
+
+  alias :hi :hello
+end
+
+obj = SayHello.new
+obj.hello   #=&gt; "Hello"
+obj.hi      #=&gt; "Hello"
+
+</code></pre>
+<p>As you can see in the above code, I have created a class called <code>SayHello</code> that
+holds an instance method of <code>hello</code>. I have then called <code>alias :hi :hello</code>, which then allows me to call the <code>hello</code> instance method by calling either <code>.hi</code> or <code>.hello</code>.</p>
+
+<p>With this you create an alias, then redefine the method that you created the alias on, the alias would then still reference the old method.</p>
+
+<p>An example would be:</p>
+<pre class="highlight plaintext"><code>class Array
+  alias :len :length
+
+  def length
+    len &gt; 5 ? "Long" : "Short"
+  end
+end
+
+obj = ["1", "2", "3", "4", "5", "6"]
+obj.length  #=&gt; "Long"
+obj.len     #=&gt; 6
+</code></pre>
+<p>As you can see, we created an alias at the top of the class and then defined
+the aliased method later on in the class. Now when I call <code>Array#len</code> it returns an integer containing the length of the array but calling <code>Array#length</code> will return the result of the conditional in our new <code>length</code> definition.</p>
+
+<p>This is an interesting and very important distinction. The ability to redefine
+a method but keep a reference to the old definition is a very valuable asset.</p>
+
+<p>So lets go ahead and create an around alias. In order to create an around alias you have to follow three steps:</p>
+
+<ol>
+<li>Alias a method</li>
+<li>Redefine the method</li>
+<li>Call the old method (the alias that you created) from within the new method
+definition.</li>
+</ol>
+
+<p>So, as I said at the very beginning, around aliases can help you achieve something that may otherwise prove difficult. Let me show you an example of when I have found it to be useful.</p>
+
+<p>I have recently carried out a simple integration with the Shopify API through their <a href="https://github.com/Shopify/shopify_api" rel="nofollow">gem</a>. I found myself calling <code>valid?</code> - which is an instance method on the <code>ShopifyAPI::Product</code> class - multiple times. Understandably this is a predicate method, but I was using this class through the command line, so I wanted to receive an indication of the errors caused at the same time as calling <code>valid?</code>.</p>
+
+<p>As this was a quick integration, I went ahead and redefined the method as below:</p>
+<pre class="highlight plaintext"><code>class ShopifyAPI::Product
+  alias :original_valid? :valid?
+  def valid?
+    if !self.original_valid?
+      puts "The following errors occurred: #{self.errors.full_messages.join(", ")}"
+      false
+    else
+      true
+    end
+  end
+end
+</code></pre>
+<p>Now, by calling <code>.valid?</code> on an instance of <code>ShopifyAPI::Product</code> it will still return the expected predicate. However at the same time if the method returns false. it will also print out the errors.</p>
+
+<p>So there you have it, I believe that a basic understanding on Ruby metaprogramming is a must have for every Ruby developer, however I would urge you to steer away from throwing it in at every given opportunity and suggest that you are more selective in your use of metaprogramming.</p>
+
+<p>In my opinion it&rsquo;s fine to add large amounts of metaprogramming if you do not expect somebody that does not know the code to touch parts of the code very often, an example of this would be a library i.e. ActiveRecord. I also see it fit to use metaprogramming in situations where you could end up in a sticky situation in order to achieve your goal.</p>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='no-cover read-next-story' href='/2015/11/26/why-i-love-update_attributes/'>
+<section class='post'>
+<h2>Why I love update_attributes</h2>
+<p>This week I am working on a project for mint digital and I came across something that inspired me&hellip;</p>
+</section>
+</a>
+<a class='read-next-story prev' href='/2016/09/04/yet-another-article-about-continuous-deployment/' style='background-image: url(/images/yet-another-article-about-continuous-deployment-cover.jpg)'>
+<section class='post'>
+<h2>Yet another article about continuous deployment</h2>
+<p>I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>

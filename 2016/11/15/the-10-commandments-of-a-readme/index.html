@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SIMONFL3TCHER: The 10 commandments (guidelines) of a README</title>
+<meta content='This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get p...' name='description'>
+<meta charset='utf-8'>
+<meta content='width=device-width, initial-scale=1.0' name='viewport'>
+<meta content='IE=edge' http-equiv='X-UA-Compatible'>
+<meta content='True' name='HandheldFriendly'>
+<meta content='SIMONFL3TCHER' property='og:site_name'>
+<meta content='article' property='og:type'>
+<meta content='The 10 commandments (guidelines) of a README' property='og:title'>
+<meta content='This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get p...' property='og:description'>
+<meta content='http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/' property='og:url'>
+<meta content='http://blog.simonfl3tcher.com/images/the-10-commandments-of-a-readme-cover.jpg' property='og:image'>
+<meta content='2016-11-15' property='article:published_time'>
+<meta content='summary' name='twitter:card'>
+<meta content='https://twitter.com/simonfl3tcher' name='twitter:site'>
+<meta content='The 10 commandments (guidelines) of a README' name='twitter:title'>
+<meta content='This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get p...' name='twitter:description'>
+<meta content='http://blog.simonfl3tcher.com/2016/11/15/the-10-commandments-of-a-readme/' name='twitter:url'>
+<meta content='http://blog.simonfl3tcher.com/images/the-10-commandments-of-a-readme-cover.jpg' name='twitter:image:src'>
+<link rel="alternate" type="application/atom+xml" title="Atom Feed" href="/feed.xml" />
+<link href="/images/favicon.ico" rel="icon" type="image/ico" />
+<link href='//fonts.googleapis.com/css?family=Merriweather:300,700,700italic,300italic|Open+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href="/stylesheets/application.css" rel="stylesheet" />
+</head>
+<body class='post-template nav-closed'>
+<div class='site-wrapper'>
+<header class='main-header post-head' style='background-image: url(/images/the-10-commandments-of-a-readme-cover.jpg)'>
+<nav class='clearfix main-nav overlay'>
+</nav>
+</header>
+<main class='content' role='main'>
+<article class='post'>
+<a class='home-button' href='/'>
+<
+Home
+</a>
+<header class='post-header'>
+<h1 class='post-title'>The 10 commandments (guidelines) of a README</h1>
+<section class='post-meta'>
+<time class='post-date' datetime='2016-11-15'>
+15 November 2016
+</time>
+on <a href='/tag/best-practices/'>Best Practices</a>
+</section>
+</header>
+<section class='post-content'><p>This article is less about attracting people to use an open-source project. Or having the most attractive README. But more about trying to get people up and running on a production app. And contributing work as soon as possible. The act of increasing &ldquo;productivity&rdquo; if you like.</p>
+
+<p>I am pretty sure everyone reading this will at some point have landed on a project on a Monday morning. Found that they don&rsquo;t know anything about the project. The README is bare. It outlines how to get the application up and running; it takes you 20 minutes to get the app up and running. You then crack your knuckles and settle down to get writing code. You run into the fact that you have no idea what the project is or how it works. You switch over to slack, ping an individual or a channel to gather some more information. The person who was working on it last can&rsquo;t quite remember either. Before long, you have dragged other people into helping you. At which point, neither of you are doing anything productive.</p>
+
+<p>This is where the importance of a detailed README becomes clear.</p>
+
+<p>Below, I outline my ten commandments of a README. By following these, you will see a reduction in trivial/time-consuming questions.</p>
+
+<h3>1. Include the project name and a brief &ldquo;business&rdquo; description.</h3>
+
+<p>Start by outlining the project name and give a brief description of what the app does. By providing a description, it will allow an individual to start to comprehend what the application does from a high level. If your app deals with buying and selling motorbikes, look to describe how this happens. As an individual looking at the source code, this will help to understand how the data model ties to the domain. As opposed to, here is the source code, try and figure out what it does.</p>
+
+<p>I would also urge you to put links to production environments at this stage. An individual is then able to go and have a click around and work out how the site flows.</p>
+
+<h3>2. Detail the technical stack</h3>
+
+<p>It is very easy for developers to say &ldquo;Hey, it&rsquo;s clear it&rsquo;s a rails app.&rdquo; I know this happens because I have been guilty of this response myself. The smaller pieces of the stack often get neglected and overlooked. These are as important as the main stack.</p>
+
+<p>You should look to outline that the app uses Redis for X, ElasticSearch for Y and Webpack for Z.</p>
+
+<p>Describing these pieces of the technical stack helps the individual. By allowing them to see how the tech ties together.</p>
+
+<h3>3. Detail 3rd parties</h3>
+
+<p>Third parties are becoming more and more commonplace. It could be something as simple as integrating with a CRM or a stock management system. But, I promise you, if your app does anything significant you will have to integrate with a 3rd party at some point.</p>
+
+<p>With this in mind, it is important to outline which 3rd parties you integrate with, if any. You should point people in the direction of setting up a sandbox account (if possible.) You should also look to outline what configuration steps to take. Getting the development environment in line with the production environment is very important.</p>
+
+<h3>4. Detail how to get the app running</h3>
+
+<p>I mean this goes without saying, in fact, if you don&rsquo;t have this, why do you even have a README?</p>
+
+<h3>5. Hosting</h3>
+
+<p>It may not seem important to describe the hosting infrastructure from the outset. You&rsquo;re probably thinking &ldquo;Why does anybody need to know about hosting at this point?&rdquo; Well, potentially not. But, it allows the individual to have full autonomy. It will enable them to make the most informed decisions. An example of this would be, say you were hosting on AWS, and the task was to add ElasticSearch. Knowing that the app is hosted on AWS would be beneficial. An individual could choose to use Elasticache or a 3rd party. Both of which would need different code additions.</p>
+
+<h3>6. Demo/QA environments</h3>
+
+<p>Outline demo/QA environments. Simple but necessary. It allows the individual to make debug in a production like environment. It allows them to do this without the fear of causing detrimental effects. It also alleviates the tedious question of &ldquo;What is the demo URL?&rdquo;</p>
+
+<h3>7. Deployment</h3>
+
+<p>Outline your deployment process. If you practice continuous deployment, describe the process of how you execute it, do you use flags or not? If so, who can see those flags? Who can alter those flags? Try to answer all the questions that would likely dictate development decisions.</p>
+
+<h3>8. Creating useful records</h3>
+
+<p>Creating useful records is the single most important thing to do. 
+Getting data into the app in the expected format is great. It allows the individual to fathom how the data model comes together. Creating these records not only allows your application to be working locally. It also allows the developer to tie records and 3rd party service together. Understanding the data is a big road block for large applications.</p>
+
+<p>If you are using a 3rd party, you should walk through how to create these records. Both on 3rd party software (if required) but also on the app. It will help ease the potential for a tedious question of  &ldquo;what does column X relate to?&rdquo;</p>
+
+<h3>9. Detail caveats</h3>
+
+<p>As with all software development, there is going to be caveats it&rsquo;s the nature of this industry. i.e. X works this way because Y happened. You should look to outline any of these as best you can. It&rsquo;s not always apparent to an individual unfamiliar with the app.</p>
+
+<p>Any caveats will allow the individual to know these in advance of any problems. Resulting in less time to debug something that is already a known problem.</p>
+
+<p>I have heard &ldquo;I remember it being done that way for some reason&rdquo; too many times. Write it down so everyone is aware and knowledge is not forgotten.</p>
+
+<h3>10. Be clear and assume no knowledge</h3>
+
+<p>Finally, be clear and in-depth. You should assume no knowledge of the project is known. It is easy to get wrapped up in the project and think &ldquo;I don&rsquo;t need to explain that, it is evident from the code.&rdquo; For an individual who is new to the project and trying to find their way around this is not the case. Things that came to your head but feel obvious go ahead and write them down in the README.</p>
+
+<h3>Conclusion</h3>
+
+<p>These &ldquo;commandments&rdquo; are more a set of guidelines. I understand that not all projects will need to cover all the points. For example, if you have a static site, seeds may not apply to you, in which case feel free to ignore. You should use this guide to think in the back of your mind &ldquo;Should I document this somewhere?&rdquo;</p>
+
+<p>Another thing to note is that not all this information is available straight of the bat. With that in mind. I would encourage you to consider your README as important as the code.</p>
+
+<p>And one final note. If you are as clear as you can be in your README, I guarantee you it will save you a whole lot of time and headache. When an individual comes to use your application, they will have a lot of the domain knowledge in front of them.<Paste></p>
+</section>
+</article>
+</main>
+<aside class='read-next'>
+<a class='read-next-story' href='/2016/09/04/yet-another-article-about-continuous-deployment/' style='background-image: url(/images/yet-another-article-about-continuous-deployment-cover.jpg)'>
+<section class='post'>
+<h2>Yet another article about continuous deployment</h2>
+<p>I know, I know. Continuous deployment is old hat 😴. I agree, there is a lot of information out&hellip;</p>
+</section>
+</a>
+<a class='read-next-story prev' href='/2017/01/24/my-alexa-skill-workflow-part-1/' style='background-image: url(/images/my-alexa-skill-workflow.jpg)'>
+<section class='post'>
+<h2>My Alexa Skill workflow (Part 1/2)</h2>
+<p>It&rsquo;s no secret; voice UI is one of the things that get my development juices flowing right now. For&hellip;</p>
+</section>
+</a>
+</aside>
+
+</div>
+</body>
+</html>
